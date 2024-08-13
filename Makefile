@@ -1,30 +1,35 @@
 INCLUDE_DIRS = 
 LIB_DIRS = 
-CC=gcc
+CC=g++
 
 CDEFS=
-CFLAGS= -O0 -g -Wcpp $(INCLUDE_DIRS) $(CDEFS)
-LIBS= -lrt
+CFLAGS= -O0 -g $(INCLUDE_DIRS) $(CDEFS)
+LIBS= 'pkg-config --cflags --libs opencv4'
+CPPLIBS= -L/usr/lib -lopencv_core -lopencv_flann -lopencv_video
 
 HFILES= 
-CFILES= capture.c
+CFILES= 
+CPPFILES= capture.cpp
 
 SRCS= ${HFILES} ${CFILES}
-OBJS= ${CFILES:.c=.o}
+CPPOBJS= ${CPPFILES:.cpp=.o}
 
-all:	capture
+all:	capture 
 
 clean:
-	-rm -f *.o *.d capture
-	-rm -f frames/*
+	-rm -f *.o *.d
+	-rm -f capture
 
 distclean:
 	-rm -f *.o *.d
 
-capture: ${OBJS}
-	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o $(LIBS)
+capture: capture.o
+	$(CC) $(LDFLAGS) $(CFLAGS) -o $@ $@.o `pkg-config --libs opencv` $(CPPLIBS)
 
 depend:
 
 .c.o:
+	$(CC) $(CFLAGS) -c $<
+
+.cpp.o:
 	$(CC) $(CFLAGS) -c $<

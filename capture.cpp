@@ -37,9 +37,10 @@ int main( int argc, char** argv ) {
     cv::Point topPosition(50, 50);
     cv::Point bottomPosition(50, 80); 
     int fontFace = cv::FONT_HERSHEY_SIMPLEX;
+    int anonCount = 0;
     double fontScale = 1;
     cv::Scalar white(255, 255, 255); 
-    cv::Scalar red(255, 0, 0); 
+    cv::Scalar red(0, 0, 255); 
     cv::Scalar green(0, 255, 0); 
     int thickness = 2;
     int lineType = cv::LINE_AA;
@@ -89,8 +90,10 @@ int main( int argc, char** argv ) {
         sprintf(timetext, "%6.3lf",  fcurtime);
         percent_diff_old = percent_diff;
 
-        if(percent_diff > 0.5){
+        if(percent_diff > 0.8){
             cv::putText(mat_frame, "Motion Detected", bottomPosition, fontFace, fontScale, red, thickness, lineType);
+            anonCount++;
+            printf("Anomalies Detected: %i\n", anonCount);
         } else {
             cv::putText(mat_frame, "No Motion Detected", bottomPosition, fontFace, fontScale, green, thickness, lineType);
         }
@@ -98,7 +101,7 @@ int main( int argc, char** argv ) {
         cv::putText(mat_frame, timestamp, topPosition, fontFace, fontScale, white, thickness, lineType);
         cv::imshow("Image Stream", mat_frame); 
 
-        char c = cv::waitKey(200); // sample rate
+        char c = cv::waitKey(200); 
         if( c == 'q' ) break;
 
         mat_gray_prev = mat_gray.clone();
